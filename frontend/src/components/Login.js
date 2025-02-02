@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -11,6 +13,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:5000/api/auth/login', { username, password });
       localStorage.setItem('token', response.data.token);
       alert('Connexion réussie');
+      navigate('/dashboard');
     } catch (error) {
       alert('Erreur lors de la connexion');
     }
