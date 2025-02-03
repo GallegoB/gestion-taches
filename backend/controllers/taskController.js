@@ -4,6 +4,7 @@ const db = require('../db');
 exports.getTasks = (req, res) => {
   const userId = req.user.id;
   const sql = 'SELECT * FROM tasks WHERE user_id = ?';
+
   db.query(sql, [userId], (err, results) => {
     if (err) {
       return res.status(500).send('Erreur lors de la récupération des tâches');
@@ -13,15 +14,22 @@ exports.getTasks = (req, res) => {
 };
 
 exports.createTask = (req, res) => {
-  const { title } = req.body;
+  const { title, description } = req.body;
   const userId = req.user.id;
-  const sql = 'INSERT INTO tasks (title, user_id) VALUES (?, ?)';
-  db.query(sql, [title, userId], (err, result) => {
+
+  if (!title || !description) {
+    return res.status(400).send('Le titre et la description sont requis');
+  }
+
+  const sql = 'INSERT INTO tasks (title, description, user_id) VALUES (?, ?, ?)';
+  console.log(userId);
+  console.log(title);
+  console.log(description);
+  db.query(sql, [title, description, userId], (err, result) => {
     if (err) {
-      return res.status(500).send('Erreur lors de l\'ajout de la tâche');
+      return res.status(500).send('Erreur lors de la création de la tâche');
     }
-    const newTask = { id: result.insertId, title, userId };
-    res.status(201).json(newTask);
+    res.status(201).send('Tâche créée avec succès');
   });
 };
 
