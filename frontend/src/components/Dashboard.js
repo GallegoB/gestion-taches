@@ -1,6 +1,18 @@
 // src/components/Dashboard.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
@@ -63,35 +75,40 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl mb-4">Tableau de bord</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          value={taskTitle}
-          onChange={(e) => setTaskTitle(e.target.value)}
-          className="border p-2 mr-2"
-          placeholder="Titre de la tâche"
-        />
-        <input
-          type="text"
-          value={taskDescription}
-          onChange={(e) => setTaskDescription(e.target.value)}
-          className="border p-2 mr-2"
-          placeholder="Description de la tâche"
-        />
-        <button onClick={addTask} className="bg-blue-500 text-white p-2 rounded">Ajouter</button>
-      </div>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id} className="mb-2 flex justify-between items-center">
-            {task.title}
-            <button onClick={() => removeTask(task.id)} className="bg-red-500 text-white p-1 rounded">Supprimer</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    <Container maxWidth="sm">
+    <Typography variant="h4" component="h1" gutterBottom>
+      Tableau de bord
+    </Typography>
+    <TextField
+      label="Titre de la tâche"
+      value={taskTitle}
+      onChange={(e) => setTaskTitle(e.target.value)}
+      fullWidth
+      margin="normal"
+    />
+      <TextField
+      label="Description de la tâche"
+      value={taskDescription}
+      onChange={(e) => setTaskDescription(e.target.value)}
+      fullWidth
+      margin="normal"
+    />
+    <Button variant="contained" color="primary" onClick={addTask}>
+      Ajouter
+    </Button>
+    <List>
+      {tasks.map((task) => (
+        <ListItem key={task.id}>
+          <ListItemText primary={task.title} />
+          <ListItemSecondaryAction>
+            <IconButton edge="end" aria-label="delete" onClick={() => removeTask(task.id)}>
+              <DeleteIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      ))}
+    </List>
+  </Container>
+);
 };
-
 export default Dashboard;
