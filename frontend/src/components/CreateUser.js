@@ -2,33 +2,40 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Box,
-  Link,
-} from '@mui/material';
+    Container,
+    Typography,
+    TextField,
+    Button,
+    Box,
+  } from '@mui/material';
 
-const Login = () => {
+const CreateUser = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { username, password });
-      localStorage.setItem('token', response.data.token);
-      alert('Connexion réussie');
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
+        username,
+        password,
+      });
+      alert('Compte créé avec succès !');
+      // Rediriger vers la page de login après la création du compte
+      const response2 = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+      localStorage.setItem('token', response2.data.token);
       navigate('/dashboard');
     } catch (error) {
-      alert('Erreur lors de la connexion');
+      alert('Erreur lors de la création du compte');
     }
   };
 
   return (
-    <Container maxWidth="xs">
+
+   <Container maxWidth="xs">
       <Box
         sx={{
           marginTop: 8,
@@ -38,9 +45,9 @@ const Login = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Connexion
+          Création d'un compte
         </Typography>
-        <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -71,12 +78,12 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Se connecter
+            Créer un compte
           </Button>
         </Box>
-        <Link href="/register">Crée un compte</Link>
       </Box>
     </Container>
   );
 };
-export default Login;
+
+export default CreateUser;
